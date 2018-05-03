@@ -1,18 +1,12 @@
 import express from 'express';
-import bookRouter from './Routes/bookRouter';
+import restaurantRouter from './routes/restaurantRouter';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 
 const app = express();
 const port = process.env.PORT || 5656;
-/*const db = mongoose.connect('mongodb://msald:!mlab12%40@ds263759.mlab.com:63759/mongodbtest', { 
-    uri_decode_auth: true 
-    }, function(err, db) {
 
-    });
-*/
-
-const db = mongoose.connect('mongodb://ds263759.mlab.com:63759/mongodbtest',
+const db = mongoose.connect('mongodb://ds113700.mlab.com:13700/restaurant',
                  {user: 'sa-msald', pass: '!mlab12@'},
                  function(err, db) {
 
@@ -27,4 +21,4 @@ app.listen(port, () => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api/books', bookRouter);
+app.use('/api/restaurants', restaurantRouter);
