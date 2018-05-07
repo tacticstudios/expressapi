@@ -6,28 +6,51 @@ const restaurantRouter = express.Router();
 restaurantRouter.route('/')
     .get((req,res) => {
         let id = req.query.id
-        let nombre = req.query.title
-        let rangoPrecios = req.query.rangoPrecios
+        let name = req.query.name
         let tags = req.query.tags
-        let direccion = req.query.direccion
-        let referencia = req.query.referencia
-        let telefono = req.query.telefono
+        let address = req.query.address
+        let references = req.query.references
+        let phone = req.query.phone
         let web = req.query.web
+        let photos = req.query.photos
+        let dishes = req.query.dishes
         
         let query = {}
 
-        if(id != null) query._id = id
-        if(nombre != null) query.nombre = nombre
-        if(rangoPrecios != null) query.rangoPrecios = rangoPrecios
-        if(tags != null) query.tags = tags
-        if(direccion != null) query.direccion = direccion
-        if(referencia != null) query.referencia = referencia
-        if(telefono != null) query.telefono = telefono
-        if(web != null) query.web = web
+        if(tags != null) {
+            let array = tags.split(',');
+            let obj = {
+                'tags.name' : {
+                    $in : array
+                }
+            }
+            query = obj
+        }
 
+        if(dishes != null) {
+            let array = tags.split(',');
+            let obj = {
+                'dishes.name' : {
+                    $in : array
+                }
+            }
+            query = obj
+        }
+
+        if(id != null) query._id = id
+        if(name != null) query.name = name
+        if(address != null) query.address = address
+        if(references != null) query.references = references
+        if(phone != null) query.phone = phone
+        if(web != null) query.web = web
+        console.log(query)
         Restaurant.find(query, (err, restaurants) => {
             res.json(restaurants)
         })
+            //Restaurant.find({ 'tags.name': query/*tags*/ }, (err, restaurants) => {
+              //  res.json(restaurants)
+            //})
+            
     })
     .post((req,res) => {
         console.log(req.body.title)
@@ -50,13 +73,15 @@ restaurantRouter.route('/:restaurantId')
         Restaurant.findOne({"_id": req.params.restaurantId}, (err, restaurant) => {
             if(restaurant == null) res.status(404).send('No se encuentra el restaurant')
             else {
-            restaurant.nombre = req.body.nombre;
-            restaurant.rangoPrecios = req.body.rangoPrecios;
+
+            restaurant.name = req.body.name;
             restaurant.tags = req.body.tags;
-            restaurant.direccion = req.body.direccion;
-            restaurant.referencia = req.body.referencia;
-            restaurant.telefono = req.body.telefono;
+            restaurant.address = req.body.address;
+            restaurant.references = req.body.references;
+            restaurant.phone = req.body.phone;
             restaurant.web = req.body.web;
+            restaurant.photos = req.body.photos;
+            restaurant.dishes = req.body.dishes;
             restaurant.save()
             res.json(restaurant)
             }
