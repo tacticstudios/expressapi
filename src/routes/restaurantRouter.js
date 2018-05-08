@@ -14,11 +14,12 @@ restaurantRouter.route('/')
         let web = req.query.web
         let photos = req.query.photos
         let dishes = req.query.dishes
+        let rating = req.query.rating
         
         let query = {}
 
         if(tags != null) {
-            let array = tags.split(',');
+            let array = Array.isArray(tags) ? tags : tags.split(',')
             let obj = {
                 'tags.name' : {
                     $in : array
@@ -28,11 +29,19 @@ restaurantRouter.route('/')
         }
 
         if(dishes != null) {
-            let array = tags.split(',');
+            let array = Array.isArray(dishes) ? dishes : dishes.split(',')
             let obj = {
                 'dishes.name' : {
                     $in : array
                 }
+            }
+            query = obj
+        }
+
+        if(rating != null) {
+            let array = rating.split(',');
+            let obj = {
+                rating: { $gt: Number(array[0])-0.01, $lt: Number(array[1])+0.01 }
             }
             query = obj
         }
@@ -59,7 +68,7 @@ restaurantRouter.route('/')
         res.status(201).send(restaurant)
     })
 
-restaurantRouter.route('/:restaurantId')
+restaurantRouter.route('/restaurantById/:restaurantId')
     .get((req,res) => {
         Restaurant.findOne({"_id": req.params.restaurantId}, (err, restaurant) => {
             if(restaurant == null) res.status(404).send('No se encuentra el restaurant')
@@ -82,6 +91,7 @@ restaurantRouter.route('/:restaurantId')
             restaurant.web = req.body.web;
             restaurant.photos = req.body.photos;
             restaurant.dishes = req.body.dishes;
+            restaurant.rating = req.body.rating;
             restaurant.save()
             res.json(restaurant)
             }
@@ -116,6 +126,20 @@ restaurantRouter.route('/:restaurantId')
             })
             }
         })
+    })
+
+restaurantRouter.route('/top10') 
+    .get((req,res) => {
+        Restaurant
+        .find({})
+        .limit(10)
+        .sort({'rating': -1})
+        .exec(function (err, restaurant){
+            if(restaurant == null) res.status(404).send('No hay restaurants')
+            else {
+            res.json(restaurant)
+            }
+        });
     })
 
 export default restaurantRouter;

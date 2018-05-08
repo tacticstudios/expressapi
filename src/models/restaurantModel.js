@@ -13,6 +13,7 @@ const restaurantModel = new Schema({
     phone: String,
     web: String,
     photos: [photoModel],
-    dishes: [dishModel]
+    dishes: [dishModel],
+    rating: Number
 })
 export default mongoose.model('restaurants', restaurantModel)
