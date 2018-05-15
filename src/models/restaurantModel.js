@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const tagModel = new Schema({ name: 'String' });
 const photoModel = new Schema({ url: 'String', description: 'String'});
-const dishModel = new Schema({ name: 'String', price: 'Number'});
+const dishModel = new Schema({ name: 'String', price: 'Number', image: 'String'});
 
 const restaurantModel = new Schema({
     name: String,
