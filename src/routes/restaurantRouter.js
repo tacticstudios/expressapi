@@ -15,6 +15,7 @@ restaurantRouter.route('/')
         let photos = req.query.photos
         let dishes = req.query.dishes
         let rating = req.query.rating
+        let tables = req.query.tables
         
         let query = {}
 
@@ -42,6 +43,16 @@ restaurantRouter.route('/')
             let array = rating.split(',');
             let obj = {
                 rating: { $gt: Number(array[0])-0.01, $lt: Number(array[1])+0.01 }
+            }
+            query = obj
+        }
+
+        if(tables != null) {
+            let array = Array.isArray(tables) ? tables : tables.split(',')
+            let obj = {
+                'tags.code' : {
+                    $in : array
+                }
             }
             query = obj
         }
@@ -92,6 +103,7 @@ restaurantRouter.route('/restaurantById/:restaurantId')
             restaurant.photos = req.body.photos;
             restaurant.dishes = req.body.dishes;
             restaurant.rating = req.body.rating;
+            restaurant.tables = req.body.tables;
             restaurant.save()
             res.json(restaurant)
             }

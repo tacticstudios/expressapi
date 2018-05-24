@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const tagModel = new Schema({ name: 'String' });
 const photoModel = new Schema({ url: 'String', description: 'String'});
 const dishModel = new Schema({ name: 'String', price: 'Number', image: 'String'});
+const tableModel = new Schema({ code: 'String', capacity: 'Number', available: 'Boolean'});
 
 const restaurantModel = new Schema({
     name: String,
@@ -14,6 +15,7 @@ const restaurantModel = new Schema({
     web: String,
     photos: [photoModel],
     dishes: [dishModel],
-    rating: Number
+    rating: Number,
+    tables: [tableModel]
 })
 export default mongoose.model('restaurants', restaurantModel)
