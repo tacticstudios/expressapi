@@ -5,7 +5,7 @@ const tagModel = new Schema({ name: 'String' });
 const photoModel = new Schema({ url: 'String', description: 'String'});
 const dishModel = new Schema({ name: 'String', price: 'Number', image: 'String'});
 const tableModel = new Schema({ code: 'String', capacity: 'Number', available: 'Boolean'});
-const openModel = new Schema({ from: 'String', to: 'String'});
+const openModel = new Schema({ day: 'String', from: 'Number', to: 'Number'});
 const locationModel = new Schema({ latitude: 'Number', longitude: 'Number'});
 
 const restaurantModel = new Schema({

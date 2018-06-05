@@ -16,6 +16,8 @@ restaurantRouter.route('/')
         let dishes = req.query.dishes
         let rating = req.query.rating
         let tables = req.query.tables
+
+        let openNow = req.query.openNow
         
         let query = {}
 
@@ -47,12 +49,37 @@ restaurantRouter.route('/')
             query = obj
         }
 
+        /*
         if(tables != null) {
             let array = Array.isArray(tables) ? tables : tables.split(',')
             let obj = {
                 'tags.code' : {
                     $in : array
                 }
+            }
+            query = obj
+        }
+        */
+
+        if(openNow == 'true') {
+            let currentTime = new Date()
+            let currentDay = currentTime.getDay()
+            let currentHours = currentTime.getHours()
+            
+            let dayName = ""
+
+            if (currentDay == 0) dayName = "sunday"
+            if (currentDay == 1) dayName = "monday"
+            if (currentDay == 2) dayName = "tuesday"
+            if (currentDay == 3) dayName = "wednesday"
+            if (currentDay == 4) dayName = "thursday"
+            if (currentDay == 5) dayName = "friday"
+            if (currentDay == 6) dayName = "saturday"
+
+            let obj = {
+                'open.day' : dayName,
+                'open.from' : { $gt: 0, $lt: currentHours + 0.1 },
+                'open.to' : { $gt: currentHours, $lt: 24 }
             }
             query = obj
         }
@@ -104,6 +131,8 @@ restaurantRouter.route('/restaurantById/:restaurantId')
             restaurant.dishes = req.body.dishes;
             restaurant.rating = req.body.rating;
             restaurant.tables = req.body.tables;
+            restaurant.open = req.body.open;
+            restaurant.location = req.body.location;
             restaurant.save()
             res.json(restaurant)
             }
